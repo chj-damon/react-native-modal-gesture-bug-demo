@@ -10,7 +10,11 @@
  */
 import React from 'react';
 import Modal from 'react-native-modal';
-import {PanGestureHandler, State} from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  State,
+  gestureHandlerRootHOC,
+} from 'react-native-gesture-handler';
 import Animated, {
   cond,
   eq,
@@ -67,16 +71,8 @@ const SlideVerify: React.FC = () => {
     },
   ]);
 
-  return (
-    <Modal
-      isVisible
-      deviceWidth={Dimensions.get('window').width}
-      deviceHeight={Dimensions.get('window').height}
-      style={{
-        margin: 0,
-        marginLeft:
-          (Dimensions.get('window').width - imageSize.puzzleWidth - 20) / 2,
-      }}>
+  const ModalContent = gestureHandlerRootHOC(() => (
+    <>
       <Animated.Code>
         {() => cond(eq(gestureState, State.END), call([addX], onDrop))}
       </Animated.Code>
@@ -153,6 +149,20 @@ const SlideVerify: React.FC = () => {
           </View>
         </View>
       </View>
+    </>
+  ));
+
+  return (
+    <Modal
+      isVisible
+      deviceWidth={Dimensions.get('window').width}
+      deviceHeight={Dimensions.get('window').height}
+      style={{
+        margin: 0,
+        marginLeft:
+          (Dimensions.get('window').width - imageSize.puzzleWidth - 20) / 2,
+      }}>
+      <ModalContent />
     </Modal>
   );
 };
